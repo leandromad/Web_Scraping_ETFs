@@ -13,5 +13,5 @@ Ao final obtemos um dataframe com os 10 melhores ETFs:
 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/82683162/218269533-594f5715-c9ef-46cc-9b47-c5fa8a40bee6.png" />
-  <p> Figura 1 - Relatório Email. </p>
+  <p> Figura 1 - 10 melhores ETFs</p>
 </div>
