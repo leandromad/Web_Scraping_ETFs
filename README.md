@@ -71,3 +71,83 @@ numero_paginas = int(numero_paginas.text.replace("of ",""))
 numero_paginas
 ```
 
+Com o número de páginas obtido podemos percorrer o loop para adquirir todas as tabelas: 
+
+```
+lista_de_tabela_por_pagina = []
+
+for pagina in range(0, numero_paginas):
+    
+    tabela = driver.find_element("xpath", '''/html/body/div[5]/section/div/div[3]
+    /section/div/div/div/div/div[2]/section[2]/div[2]/div/table''')
+
+    html_tabela = tabela.get_attribute("outerHTML")
+
+    tabela_final = pd.read_html(html_tabela)[0]
+
+    lista_de_tabela_por_pagina.append(tabela_final)
+    
+    botao_avancar_pagina = driver.find_element("xpath", "/html/body/div[5]/section/div/div[3]/section/div/div/div/div/div[2]/section[2]/div[2]/section[2]/div[2]/div/span[2]")
+    
+    driver.execute_script("arguments[0].click();", botao_avancar_pagina)
+    
+base_de_dados_completa = pd.concat(lista_de_tabela_por_pagina)
+
+base_de_dados_completa
+```
+Para cada uma das páginas existente vamos guardar a tabela em uma lista ``lista_de_tabela_por_pagina``, após iremos avançar para a próxima página ``botao_avanca_pagina`` e assim sucessivamente, ao atingir o ``numero_paginas`` chegamos ao fim do loop e temos nosso dataframe concatenando as listas ``base_de_dados_completa = pd.concat(lista_de_tabela_por_pagina)``
+
+A base de dados nesse momento é:
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/82683162/219215424-bec9786a-c9a4-4579-9241-da3e70deb5fe.png" />
+  <p> Figura 4 - Base de dados 1.</p>
+</div>
+
+Como no final queremos classificar os ETFs conforme sua performance temos que adiquirir os dados de performance, existe uma tabela própria para isso. Iremos captura-la do próprio site:
+
+```
+botao_performance = driver.find_element("xpath", '''/html/body/div[5]/section/div/div[3]/section/div/div/div/div/div[2]
+/section[2]/div[2]/ul/li[2]/span''')
+
+driver.execute_script("arguments[0].click();", botao_performance)
+
+for pagina in range (0, numero_paginas):
+    
+    botao_voltar = driver.find_element("xpath", '''/html/body/div[5]/section/div/div[3]/section/div/div/div/div/div[2]
+    /section[2]/div[2]/section[2]/div[2]/div/span[1]''')
+    
+    driver.execute_script("arguments[0].click();", botao_voltar)
+```
+
+A primeira parte do script ``botao_performance`` localiza o full xpath do botão que encaminha para a tabela performance, e fazemos a execução do click em ``driver.execute_script("arguments[0].click();", botao_performance)``. Como nesse momento estamos na última página por conta do último loop executado, executamos outro loop para voltar a página 1.
+
+E agora, da mesma maneira que adquirimos os dados para o Dataframe anterior fazemos para esse Dataframe.
+```
+lista_de_tabela_por_pagina = []
+
+for pagina in range(0, numero_paginas):
+    
+    tabela = driver.find_element("xpath", '''/html/body/div[5]/section/div/div[3]
+    /section/div/div/div/div/div[2]/section[2]/div[2]/div/table''')
+
+    html_tabela = tabela.get_attribute("outerHTML")
+
+    tabela_final = pd.read_html(html_tabela)[0]
+
+    lista_de_tabela_por_pagina.append(tabela_final)
+    
+    botao_avancar_pagina = driver.find_element("xpath", "/html/body/div[5]/section/div/div[3]/section/div/div/div/div/div[2]/section[2]/div[2]/section[2]/div[2]/div/span[2]")
+    
+    driver.execute_script("arguments[0].click();", botao_avancar_pagina)
+    
+base_de_dados_performance = pd.concat(lista_de_tabela_por_pagina)
+
+base_de_dados_performance
+```
+E agora temos o seguinte dataframe:
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/82683162/219216663-3fd28585-38a8-4402-9ff8-4a1b05512e33.png" />
+  <p> Figura 5 - Dataframe 2.</p>
+</div>
