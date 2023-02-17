@@ -263,3 +263,5 @@ melhores_etfs.head(10)
   <img src="https://user-images.githubusercontent.com/82683162/219645993-bd5a3665-025d-443e-8cfe-bc1b4f5c7d87.png" />
   <p> Figura 9 - Melhores ETFs.</p>
 </div>
+
+Na imagem temos o resultado final do script com os 10 ETFs melhores classificados no ranking de retorno. Utilizando o primeiro do ranking como exemplo, o ETF da SPDR S&P Semiconductor ETF, possui $1.33B sob gestão e rendeu aproximadamente 24% ano ano em 10 anos, 26% ao ano em 5 anos e 25% ao ano em 3 anos.
