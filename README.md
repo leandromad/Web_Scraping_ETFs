@@ -187,6 +187,7 @@ Ainda temos que tratar esse Dataframe, primeiro iremos substituir os dados falta
 base_de_dados_performance = base_de_dados_performance.replace("--",pd.NA)
 
 base_de_dados_performance
+
 ```
 E agora vamos dropar os ``NaN`` do dataframe:
 ``` 
@@ -194,3 +195,71 @@ base_de_dados_performance = base_de_dados_performance.dropna()
 
 base_de_dados_performance
 ```
+
+E o nosso Dataframe 2 de performance agora é:
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/82683162/219643880-d74d8e26-eb0e-4dde-98f3-296b0d046c7b.png" />
+  <p> Figura 7 - Dataframe 2 transformado 2.</p>
+</div>
+
+Como os dados desse dataframe estão em porcentagem e formato string iremos passar para float:
+
+```
+for i in base_de_dados_performance.columns:
+
+    base_de_dados_performance[i] = base_de_dados_performance[i].str.rstrip('%').astype(float)/100
+
+base_de_dados_performance
+```
+
+E então podemos unir os dois dataframes:
+```
+base_de_dados_final = base_de_dados_completa.join(base_de_dados_performance, how = "inner")
+base_de_dados_final
+```
+
+Temos o seguinte Dataframe:
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/82683162/219645039-449ce081-9cea-4b1c-be2b-f6e1b5f13687.png" />
+  <p> Figura 8 - Base de dados final.</p>
+</div>
+
+Ainda queremos tirar dos nossos dados ETFs que estão alavancados portanto utilizaremos um filtro:
+```
+base_de_dados_final = base_de_dados_final[~base_de_dados_final['Segment'].str.contains("Leveraged")]
+base_de_dados_final
+``` 
+
+Podemos agora fazer nosso rank dos ultimos 3, 5 e 10 anos.
+```
+base_de_dados_final['rank_3_anos'] = base_de_dados_final['3 Years'].rank(ascending = False)
+base_de_dados_final['rank_5_anos'] = base_de_dados_final['5 Years'].rank(ascending = False)
+base_de_dados_final['rank_10_anos'] = base_de_dados_final['10 Years'].rank(ascending = False)
+
+base_de_dados_final
+```
+
+E fazer um rank final com a soma desses rank's:
+```
+base_de_dados_final['rank_final'] = base_de_dados_final['rank_3_anos'] + base_de_dados_final['rank_5_anos'] + base_de_dados_final['rank_10_anos'] 
+base_de_dados_final
+```
+
+Por fim vamos ordenar esse dataframe do menor rank para o maior
+```
+melhores_etfs = base_de_dados_final.sort_values(by = 'rank_final')
+melhores_etfs
+```
+
+E mostramos os 10 melhores ETFs em quesito performance nos ultimos anos.
+```
+melhores_etfs.head(10)
+```
+
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/82683162/219645993-bd5a3665-025d-443e-8cfe-bc1b4f5c7d87.png" />
+  <p> Figura 9 - Melhores ETFs.</p>
+</div>
