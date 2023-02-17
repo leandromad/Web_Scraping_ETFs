@@ -151,3 +151,46 @@ E agora temos o seguinte dataframe:
   <img src="https://user-images.githubusercontent.com/82683162/219216663-3fd28585-38a8-4402-9ff8-4a1b05512e33.png" />
   <p> Figura 5 - Dataframe 2.</p>
 </div>
+
+Para o Dataframe 1 da Figura 4 iremos passar o Ticker como index:
+```
+base_de_dados_completa = base_de_dados_completa.set_index("Ticker")
+
+base_de_dados_completa
+``` 
+
+Agora temos o Dataframe 1 da Figura 4 transformado em:
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/82683162/219640800-ece87aa6-edf8-4c4d-a799-b58497c65165.png" />
+  <p> Figura 6 - Dataframe 1 transformado.</p>
+</div>
+
+O mesmo iremos fazer para o Dataframe 2 da Figura 5 e também iremos selecionar as colunas ``3 Years','5 Years','10 Years`` desse Dataframe.
+
+```
+base_de_dados_performance = base_de_dados_performance.set_index("Ticker")
+base_de_dados_performance = base_de_dados_performance[['3 Years','5 Years','10 Years']]
+base_de_dados_performance
+```
+
+E obtemos o seguinte Dataframe
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/82683162/219641066-475c9534-73ad-40b5-bf3c-015fa4cbc8d1.png" />
+  <p> Figura 6 - Dataframe 2 transformado.</p>
+</div>
+
+Ainda temos que tratar esse Dataframe, primeiro iremos substituir os dados faltantes ``--`` por ``NaN``.
+
+```
+base_de_dados_performance = base_de_dados_performance.replace("--",pd.NA)
+
+base_de_dados_performance
+```
+E agora vamos dropar os ``NaN`` do dataframe:
+``` 
+base_de_dados_performance = base_de_dados_performance.dropna()
+
+base_de_dados_performance
+```
